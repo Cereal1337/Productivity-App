@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:productivity/widgets/error.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback showRegisterPage;
@@ -24,9 +23,20 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
     } catch (e) {
-      
+      error(
+          "Make sure your email is valid and your password is at least 6 characters");
       print("details incorrect");
     }
+  }
+
+  void error(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Container(
+        child: Text(msg),
+      ),
+      behavior: SnackBarBehavior.floating,
+      width: 300,
+    ));
   }
 
   @override
@@ -123,6 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 5,
                 ),
+
                 // Register message
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

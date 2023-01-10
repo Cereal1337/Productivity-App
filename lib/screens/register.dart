@@ -1,6 +1,8 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -18,21 +20,36 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  Future register() async {
-    if (passwordConfirmed()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
-    }
-  }
-
   bool passwordConfirmed() {
     if (_confirmPasswordController.text.trim() ==
         _passwordController.text.trim()) {
       return true;
     } else {
+      error("Password and confirmed password are not the same");
       return false;
     }
+  }
+
+  Future register() async {
+    try {
+      if (passwordConfirmed()) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
+      }
+    } catch (e) {
+      error("Email is already used or is invalid");
+    }
+  }
+
+  void error(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Container(
+        child: Text(msg),
+      ),
+      behavior: SnackBarBehavior.floating,
+      width: 300,
+    ));
   }
 
   @override
