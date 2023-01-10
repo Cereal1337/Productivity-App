@@ -45,11 +45,15 @@ class _RegisterPageState extends State<RegisterPage> {
       alert("Email is already used or is invalid");
     }
 
-    addUserDetails(_firstNameController.text.trim(),
-        _lastNameController.text.trim(), int.parse(_ageController.text.trim()), _emailController.text.trim());
+    addUserDetails(
+        _firstNameController.text.trim(),
+        _lastNameController.text.trim(),
+        int.parse(_ageController.text.trim()),
+        _emailController.text.trim());
   }
 
-  Future addUserDetails(String firstName, String lastName, int age, String email) async {
+  Future addUserDetails(
+      String firstName, String lastName, int age, String email) async {
     await FirebaseFirestore.instance.collection('users').add({
       'age': age,
       'firstName': firstName,
