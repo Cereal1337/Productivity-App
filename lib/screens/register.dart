@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -16,6 +17,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _ageController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -40,6 +44,18 @@ class _RegisterPageState extends State<RegisterPage> {
     } catch (e) {
       alert("Email is already used or is invalid");
     }
+
+    addUserDetails(_firstNameController.text.trim(),
+        _lastNameController.text.trim(), int.parse(_ageController.text.trim()), _emailController.text.trim());
+  }
+
+  Future addUserDetails(String firstName, String lastName, int age, String email) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'age': age,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+    });
   }
 
   void alert(String msg) {
@@ -56,6 +72,10 @@ class _RegisterPageState extends State<RegisterPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _lastNameController.dispose();
+    _firstNameController.dispose();
+    _ageController.dispose();
     super.dispose();
   }
 
@@ -67,6 +87,86 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Center(
             child: SingleChildScrollView(
               child: Column(children: [
+                // First Name Box
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(29)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: TextField(
+                        controller: _firstNameController,
+                        decoration: InputDecoration(
+                            border: InputBorder.none, hintText: "First Name"),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 10,
+                ),
+                // Last Name Box
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(29)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: TextField(
+                        controller: _lastNameController,
+                        decoration: InputDecoration(
+                            border: InputBorder.none, hintText: "Last Name"),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 10,
+                ),
+
+                // Age Input
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(29)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: TextField(
+                        controller: _ageController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(3)
+                        ],
+                        decoration: InputDecoration(
+                            border: InputBorder.none, hintText: "Age"),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 10,
+                ),
+
                 // Email Box
 
                 Padding(
@@ -177,7 +277,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Already got an account?'),
+                    Text('Already got an account? '),
                     GestureDetector(
                       onTap: widget.showLoginPage,
                       child: Text(
