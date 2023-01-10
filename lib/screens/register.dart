@@ -25,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _passwordController.text.trim()) {
       return true;
     } else {
-      error("Password and confirmed password are not the same");
+      alert("Password and confirmed password are not the same");
       return false;
     }
   }
@@ -38,11 +38,11 @@ class _RegisterPageState extends State<RegisterPage> {
             password: _passwordController.text.trim());
       }
     } catch (e) {
-      error("Email is already used or is invalid");
+      alert("Email is already used or is invalid");
     }
   }
 
-  void error(String msg) {
+  void alert(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Container(
         child: Text(msg),
@@ -50,6 +50,13 @@ class _RegisterPageState extends State<RegisterPage> {
       behavior: SnackBarBehavior.floating,
       width: 300,
     ));
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
