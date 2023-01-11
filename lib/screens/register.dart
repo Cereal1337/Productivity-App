@@ -40,16 +40,17 @@ class _RegisterPageState extends State<RegisterPage> {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim());
+        addUserDetails(
+        _firstNameController.text.trim(),
+        _lastNameController.text.trim(),
+        int.parse(_ageController.text.trim()),
+        _emailController.text.trim());
       }
     } catch (e) {
       alert("Email is already used or is invalid");
     }
 
-    addUserDetails(
-        _firstNameController.text.trim(),
-        _lastNameController.text.trim(),
-        int.parse(_ageController.text.trim()),
-        _emailController.text.trim());
+    
   }
 
   Future addUserDetails(
